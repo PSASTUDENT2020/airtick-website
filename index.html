@@ -3,10 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airtick - Grow Your Business on WhatsApp</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Airtick - WhatsApp Business API</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo h3 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #667eea;
+        }
+
+        .nav-cta {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #fff, rgba(255,255,255,0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat span {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .stat small {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .hero-image {
+            text-align: center;
+        }
+
+        .hero-mockup {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 25px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.3);
+            background: white;
+            padding: 2rem;
+        }
+
+        /* Features */
+        .features {
+            padding: 120px 0;
+            background: #f8fafc;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            text-align: center;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #333, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.25rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        /* Stats */
+        .stats {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            display: block;
+            line-height: 1;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 120px 0;
+            background: #f8fafc;
+            text-align: center;
+        }
+
+        .pricing-card {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(30px);
+            border-radius: 30px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .price {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .amount {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 2rem 0;
+        }
+
+        .features-list li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #555;
+        }
+
+        .features-list i {
+            color: #667eea;
+            font-size: 1.2rem;
+            width: 20px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 120px 0;
+            background: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: #f8fafc;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .testimonial-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-style: italic;
+        }
+
+        /* CTA */
+        .cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: #ccc;
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-menu, .nav-cta {
+                display: none;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-mockup {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -19,39 +443,34 @@
                 <li><a href="#features">Features</a></li>
                 <li><a href="#pricing">Pricing</a></li>
                 <li><a href="#testimonials">Reviews</a></li>
-                <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="nav-cta">
-                <a href="#demo" class="btn-primary">Book Demo</a>
-                <a href="#download" class="btn-secondary">Download App</a>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+                <a href="#demo" class="btn btn-primary">Book Demo</a>
+                <a href="#download" class="btn btn-secondary">Download</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero">
         <div class="hero-container">
-            <div class="hero-content">
+            <div>
                 <h1 class="hero-title">
                     Grow your business<br>
                     <span class="gradient-text">on WhatsApp</span>
                 </h1>
                 <p class="hero-subtitle">
-                    Personalize communication and sell more with the WhatsApp Business API platform that automates marketing, sales, service and support.
+                    Personalize communication and sell more with WhatsApp Business API platform 
+                    that automates marketing, sales, service & support.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#demo" class="btn-primary btn-large">Book Demo</a>
-                    <a href="#download" class="btn-secondary btn-large">Download App</a>
+                    <a href="#demo" class="btn btn-primary">Book Demo</a>
+                    <a href="#download" class="btn btn-secondary">Download App</a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
                         <span>1,749+</span>
-                        <small>Happy Customers</small>
+                        <small>Customers</small>
                     </div>
                     <div class="stat">
                         <span>24/7</span>
@@ -60,94 +479,94 @@
                 </div>
             </div>
             <div class="hero-image">
-                <div class="floating-card">
-                    <img src="assets/images/dashboard.png" alt="Airtick Dashboard">
+                <div class="hero-mockup">
+                    <div style="background: linear-gradient(135deg, #f0f2ff, #e8eaff); height: 400px; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: #667eea; font-size: 1.2rem; font-weight: 600;">
+                        📱 Airtick Dashboard<br>
+                        <small>WhatsApp Business API</small>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Features -->
     <section id="features" class="features">
         <div class="container">
-            <h2 class="section-title">Connect, Automate, and Grow on WhatsApp</h2>
-            <p class="section-subtitle">Reach your customers instantly, automate conversations, and manage all interactions seamlessly.</p>
-            
+            <h2 class="section-title">Connect, Automate, Grow</h2>
+            <p class="section-subtitle">Reach customers instantly & manage conversations seamlessly</p>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h3>Multi-agent Inbox</h3>
-                    <p>Collaborate seamlessly by managing all customer chats in one unified team inbox for better workflow.</p>
+                    <h3>Multi-Agent Inbox</h3>
+                    <p>Shared team inbox for customer support. Collaborate seamlessly.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-broadcast-tower"></i>
                     </div>
                     <h3>Bulk Broadcast</h3>
-                    <p>Send promotional messages to thousands of customers in just a few clicks for maximum reach.</p>
+                    <p>Send promotional messages to thousands in few clicks.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-robot"></i>
                     </div>
                     <h3>AI Chatbots</h3>
-                    <p>Automated WhatsApp chatbot responding to customer queries 24/7.</p>
+                    <p>Automated replies & smart chatbots working 24/7.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3>Real-time Analytics</h3>
-                    <p>Track, analyze, and optimize every conversation to boost performance.</p>
+                    <p>Track conversations & optimize performance.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
+    <!-- Stats -->
     <section class="stats">
         <div class="container">
             <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number" data-target="120">0</div>
-                    <div class="stat-label">USD/Month</div>
+                <div>
+                    <div class="stat-number">$120</div>
+                    <div>Per Month</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number" data-target="1749">0</div>
-                    <div class="stat-label">Customers</div>
+                <div>
+                    <div class="stat-number">1,749+</div>
+                    <div>Customers</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number" data-target="247">0</div>
-                    <div class="stat-label">Countries</div>
+                <div>
+                    <div class="stat-number">24/7</div>
+                    <div>Support</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing Section -->
+    <!-- Pricing -->
     <section id="pricing" class="pricing">
         <div class="container">
-            <h2 class="section-title">Meet our Affordable Price</h2>
-            <div class="pricing-card featured">
-                <div class="pricing-header">
-                    <h3>Airtick</h3>
-                    <div class="price">
-                        <span class="currency">$</span>
-                        <span class="amount">120</span>
-                        <span class="period">/month</span>
-                    </div>
-                    <small>Billed 1 YEAR</small>
+            <h2 class="section-title" style="color: #333;">Simple Pricing</h2>
+            <div class="pricing-card">
+                <h3>Airtick Pro</h3>
+                <div class="price">
+                    <span class="currency">$</span>
+                    <span class="amount">120</span>
+                    <span class="period">/month</span>
                 </div>
+                <small>Billed annually - Save 20%</small>
                 <ul class="features-list">
-                    <li><i class="fas fa-check"></i> Official WhatsApp Business API</li>
-                    <li><i class="fas fa-check"></i> Multi-Agent Chat Support</li>
+                    <li><i class="fas fa-check"></i> WhatsApp Business API</li>
+                    <li><i class="fas fa-check"></i> Multi-Agent Support</li>
                     <li><i class="fas fa-check"></i> CRM Integration</li>
                     <li><i class="fas fa-check"></i> Bulk Messaging</li>
                     <li><i class="fas fa-check"></i> Real-time Analytics</li>
                 </ul>
-                <a href="#demo" class="btn-primary full-width">Get Started</a>
+                <a href="#demo" class="btn btn-primary">Get Started</a>
             </div>
         </div>
     </section>
@@ -155,51 +574,52 @@
     <!-- Testimonials -->
     <section id="testimonials" class="testimonials">
         <div class="container">
-            <h2 class="section-title">1,749 Customers Love Airtick</h2>
+            <h2 class="section-title" style="color: #333;">Customers Love Airtick</h2>
             <div class="testimonials-grid">
                 <div class="testimonial-card">
                     <div class="testimonial-text">
-                        "Honestly, I can't believe how much time AirTick saved us. We're actually responding to customers now!"
+                        "Can't believe how much time Airtick saved us. We're actually responding to customers now!"
                     </div>
-                    <div class="testimonial-author">
-                        <strong>BFG Advisory</strong>
-                    </div>
+                    <div style="font-weight: 700; color: #667eea; margin-top: 1rem;">
+
+                                            BFG Advisory
+                </div>
                 </div>
                 <div class="testimonial-card">
                     <div class="testimonial-text">
-                        "My customers love how fast we reply now. They don't even know it's automated!"
+                        "Customers love how fast we reply now. They don't even know it's automated!"
                     </div>
-                    <div class="testimonial-author">
-                        <strong>Just Do Travel</strong>
+                    <div style="font-weight: 700; color: #667eea; margin-top: 1rem;">
+                        Just Do Travel
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- CTA -->
     <section class="cta">
         <div class="container">
             <h2>Ready to Grow on WhatsApp?</h2>
-            <p>Join hundreds of businesses scaling with Airtick</p>
-            <a href="#demo" class="btn-primary btn-large">Book Demo</a>
+            <p>Join 1,749+ businesses scaling with Airtick</p>
+            <a href="#demo" class="btn btn-primary" style="padding: 18px 40px; font-size: 1.1rem;">Book Demo Now</a>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer id="contact">
+    <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Airtick</h3>
-                    <p>Grow your business on WhatsApp with automated marketing, sales, and support.</p>
+                    <p>WhatsApp Business API platform for marketing, sales & support automation.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Product</h4>
                     <ul>
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">Download</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#download">Download</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -216,12 +636,69 @@
                     <p><i class="fas fa-envelope"></i> support@airtick.com</p>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Airtick. All rights reserved.</p>
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333; opacity: 0.7;">
+                <p>&copy; 2025 Airtick. All rights reserved. | Dubai, UAE</p>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Demo booking simulation
+        document.querySelectorAll('[href="#demo"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('🎉 Demo Booked Successfully!\n\nWe will contact you within 24 hours.\nEmail: demo@airtick.com\nPhone: +971 54 994 9948');
+            });
+        });
+
+        // Button hover effects
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // Animate sections on scroll
+        document.querySelectorAll('.features, .stats, .pricing, .testimonials, .cta').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
